@@ -21,7 +21,7 @@ class PRDGeneration:
             "backend_output": None
         }
 
-    def collect_user_requirements(self):
+    def collect_user_requirements(self):  # sourcery skip: class-extract-method
         print("\n📌 Gathering User Requirements...")
         agent = user_requirements_agent()
         task = collect_requirements_task(agent)
