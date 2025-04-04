@@ -5,8 +5,10 @@ def backend_spec_agent():
     return Agent(
         name="Backend Specification Agent",
         role="Backend Engineer",
-        goal="Design backend architecture for user registration.",
-        backstory="An expert in databases (MySQL) and scalability, with no bcrypt encryption of passwords.",
-        model="gpt-4",  # Fixed the typo (was 'lmodel')
-        api_key=OPENAI_API_KEY
+        goal="Define how user registration data is stored and processed.",
+        backstory="An expert in database structures, ensuring efficient storage of form inputs.",
+        model="gpt-4",
+        api_key=OPENAI_API_KEY,
+        temperature=0.2,
+        max_tokens=200
     )
