@@ -1,6 +1,5 @@
-
-from crewai import Crew
 #!/usr/bin/env python
+from crewai import Crew
 from crewai.flow import Flow, start, listen
 from pydantic import BaseModel
 from typing import Optional
@@ -16,6 +15,7 @@ from tasks.define_api import define_api_task
 from tasks.define_backend import define_backend_task
 
 from prd_writer import PRDWriter
+from utils.stability_checker import run_with_stability_check
 
 
 class PRDState(BaseModel):
@@ -37,40 +37,44 @@ class PRDFlow(Flow[PRDState]):
         print("\n📌 Gathering User Requirements...")
         agent = user_requirements_agent()
         task = collect_requirements_task(agent)
-        result = Crew(agents=[agent], tasks=[task], verbose=True).kickoff()
-
+        crew = Crew(agents=[agent], tasks=[task], verbose=True)
+        result, confidence = run_with_stability_check(crew)
         self.state.user_req_output = result
         PRDWriter.write_section("User Requirements", result)
+        print(f"🧪 Confidence Score: {confidence}%")
 
     @listen(gather_user_requirements)
     def define_uiux(self):
         print("\n🎨 Defining UI/UX Design...")
         agent = uiux_design_agent()
         task = define_uiux_task(agent, self.state.user_req_output)
-        result = Crew(agents=[agent], tasks=[task], verbose=True).kickoff()
-
+        crew = Crew(agents=[agent], tasks=[task], verbose=True)
+        result, confidence = run_with_stability_check(crew)
         self.state.uiux_output = result
         PRDWriter.write_section("UI/UX Design", result)
+        print(f"🧪 Confidence Score: {confidence}%")
 
     @listen(define_uiux)
     def define_api_spec(self):
         print("\n🔗 Defining API Specification...")
         agent = api_spec_agent()
         task = define_api_task(agent, self.state.uiux_output)
-        result = Crew(agents=[agent], tasks=[task], verbose=True).kickoff()
-
+        crew = Crew(agents=[agent], tasks=[task], verbose=True)
+        result, confidence = run_with_stability_check(crew)
         self.state.api_output = result
         PRDWriter.write_section("API Specification", result)
+        print(f"🧪 Confidence Score: {confidence}%")
 
     @listen(define_api_spec)
     def define_backend(self):
         print("\n🛠️ Defining Backend Architecture...")
         agent = backend_spec_agent()
         task = define_backend_task(agent, self.state.api_output)
-        result = Crew(agents=[agent], tasks=[task], verbose=True).kickoff()
-
+        crew = Crew(agents=[agent], tasks=[task], verbose=True)
+        result, confidence = run_with_stability_check(crew)
         self.state.backend_output = result
         PRDWriter.write_section("Backend Architecture", result)
+        print(f"🧪 Confidence Score: {confidence}%")
 
     @listen(define_backend)
     def complete(self):

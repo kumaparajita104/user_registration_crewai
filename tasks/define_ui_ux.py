@@ -3,17 +3,13 @@ from crewai import Task
 def define_uiux_task(agent, user_req_output):
     return Task(
         description=(
-            "Define the **UI/UX structure** for the registration form in a **concise, bullet-point format**. "
-            "Keep it **simple, clear, and non-technical**.\n\n"
-            "- **Field Arrangement**: How fields are grouped and aligned.\n"
-            "- **Label & Input Styling**: Font size, label position, and input appearance.\n"
-            "- **Button Design**: Shape, color, and placement.\n"
-            "- **Feedback & Validation**: How errors and confirmations appear.\n"
-            "- **Cursor & Navigation**: Tab order and hover effects.\n\n"
-            "**Avoid exact pixel values and hex codes. Focus on general design choices.**"
+            "Based on the fields below, define a clean and non-technical UI/UX structure in bullet points.\n"
+            "Use simple terms for:\n"
+            "- Field Grouping\n- Label & Input Styling\n- Button Design\n- Feedback Messages\n- Navigation Order\n\n"
+            f"User Fields:\n{user_req_output}"
         ),
         expected_output=(
-            "A structured **non-technical** UI/UX specification using simple terms (e.g., 'Medium font size, Light color')."
+            "A concise bullet-point list describing layout, styling and flow. No UI code, no explanations, no design tokens."
         ),
         agent=agent
     )
