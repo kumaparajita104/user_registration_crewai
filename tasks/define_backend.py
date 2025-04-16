@@ -1,13 +1,19 @@
 from crewai import Task
 
-def define_backend_task(agent, api_output):
+def define_backend_task(agent, api_output, problem_statement):
     return Task(
         description=(
-            "Describe how user registration details are stored and managed but don't give user table structure:\n"
-            "\n- What information is saved (e.g., name, age, email)"
-            "\n- How the system organizes and retrieves it"
-            
+            "Based on the following form interaction and context, explain how the system stores and handles the user's data.\n\n"
+            f"Context:\n{problem_statement}\n\n"
+            f"Form Interaction Details:\n{api_output}\n\n"
+            "Focus Areas:\n"
+            "- What kind of data is stored (e.g., 'username', 'email', etc.)\n"
+            "- How it is organized, retrieved, and made accessible later\n"
+            "- Avoid details like table schemas or security mechanisms"
         ),
-        expected_output="Please give it in points highlighting important key words giving a brief overview of how user data is stored and accessed.Please refrain from giving security insights and lengthy proceses.",
+        expected_output=(
+            "Provide a concise list of bullet points outlining backend storage and data handling. "
+            "Highlight key terms using *asterisks* or \"inverted commas\". Keep explanations minimal, no in-depth security or architectural details."
+        ),
         agent=agent
     )

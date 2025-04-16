@@ -1,16 +1,18 @@
 from crewai import Task
 
-def collect_requirements_task(agent):
+def collect_requirements_task(agent, problem_statement: str):
     return Task(
         description=(
-            "List the required fields for user registration, specifying:\n"
+            f"Based on the following problem statement, identify and list the essential user input fields required to fulfill the goal:\n\n"
+            f"\"\"\"\n{problem_statement}\n\"\"\"\n\n"
             "- Field Name\n"
-            "- Type (Numeric, Alphanumeric, etc.)\n"
+            "- Type (Alphanumeric, Numeric, Date, etc.)\n"
             "- Mandatory (Yes/No)\n"
-            "- One-line purpose definition"
+            "- Purpose (Clear and concise definition of the field’s use)"
         ),
         expected_output=(
-            "A structured table listing only necessary fields with attributes."
+            "A clean markdown table listing **only the necessary fields** with their attributes. "
+            "Do not include explanations, headers, or any extra content. Only the table in the specified format."
         ),
         agent=agent
     )
